@@ -1,0 +1,31 @@
+.btn-icon {
+    width: 35px;
+    line-height: 37px;
+    height: 35px;
+}
+
+.table>tbody>tr>td
+{
+	padding: 2px;
+}
+
+.h-inner
+{
+	padding : 0;
+}
+
+#header
+{
+	min-height: 40px;
+}
+
+#main
+{
+	padding-top: 70px;
+}
+
+.sidebar
+{
+	top : 40px;
+	height: calc(100% - 40px);
+}
