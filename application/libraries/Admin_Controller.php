@@ -1,3 +1,4 @@
+
 <?php
 class Admin_Controller extends CI_Controller
 {
@@ -11,13 +12,13 @@ class Admin_Controller extends CI_Controller
 		$this->data['meta_title'] = 'Admin panel : Msakhi';
 		$this->data['my_title'] = "Intrahealth Admin";
 		$exception_uris = array(
-					'admin',
-					'admin/login/verifylogin',
-					'admin/login/forget_pass',
-					'admin/login/logout'
-				);
-				if ($this->Users_Model->isLoggedInAdmin() != FALSE)
-				{
+			'admin',
+			'admin/login/verifylogin',
+			'admin/login/forget_pass',
+			'admin/login/logout'
+			);
+		if ($this->Users_Model->isLoggedInAdmin() != FALSE)
+		{
 					/**
 					 * Here any pre-rendering tasks
 					 */
@@ -27,10 +28,10 @@ class Admin_Controller extends CI_Controller
 				{
 					if ($this->Users_Model->isLoggedInAdmin() == FALSE)
 					{
-			      redirect('');
+						redirect('');
 					} 
+				}
 			}
-	}
 
-	function index(){}
-}
+			function index(){}
+		}

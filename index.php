@@ -67,7 +67,7 @@ function __autoload($classname) {
  */
  
  // change the UAT sever address when we get one sanctioned
-	if($_SERVER['SERVER_NAME'] == 'msakhiuk.microwarecomp.com'){
+	if($_SERVER['SERVER_NAME'] == 'msakhi.org'){
 		define('ENVIRONMENT', 'production');
 	}else{
 		define('ENVIRONMENT', 'development');

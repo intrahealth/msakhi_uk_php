@@ -263,7 +263,7 @@ class Dashboard2_model extends CI_Model {
 		SELECT DISTINCT
 		(womenname_guid)
 		FROM
-		tblmstfpans ans";
+		tblfp_visit ans";
 		
 		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
 		{
@@ -274,7 +274,7 @@ class Dashboard2_model extends CI_Model {
 		SELECT DISTINCT
 		(womenname_guid)
 		FROM
-		tblmstfpfdetail fp";
+		tblfp_followup fp";
 
 		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
 		{
@@ -321,7 +321,7 @@ class Dashboard2_model extends CI_Model {
 		SELECT DISTINCT
 		(womenname_guid)
 		FROM
-		tblmstfpfdetail fp
+		tblfp_followup fp
 		where fp.MethodAdopted = 2 or fp.MethodAdopted = 3";
 
 		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
@@ -365,7 +365,7 @@ class Dashboard2_model extends CI_Model {
 		SELECT DISTINCT
 		(womenname_guid)
 		FROM
-		tblmstfpfdetail fp
+		tblfp_followup fp
 		where fp.MethodAdopted = 1";
 
 		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
@@ -409,7 +409,7 @@ class Dashboard2_model extends CI_Model {
 		SELECT DISTINCT
 		(womenname_guid)
 		FROM
-		tblmstfpfdetail fp
+		tblfp_followup fp
 		where fp.MethodAdopted = 4 or fp.MethodAdopted = 5";
 
 		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
@@ -431,27 +431,53 @@ class Dashboard2_model extends CI_Model {
 			return $this->pregnancies_registered_count;
 		}
 
-		$query = "select 
-		count(*) as total
-		FROM tblpregnant_woman pw 
-		inner join tblhhsurvey s 
-		on pw.HHGUID = s.HHSurveyGUID
-		where pw.IsPregnant = 1";
+		// $query = "select 
+		// count(*) as total
+		// FROM tblpregnant_woman pw 
+		// inner join tblhhsurvey s 
+		// on pw.HHGUID = s.HHSurveyGUID
+		// where pw.IsPregnant = 1";
+
+		// if ($this->filter_data['ANM'] != NULL) 
+		// {
+		// 	$query .= " and s.ANMID = " . $this->filter_data['ANM'];
+		// }
+
+		// if ($this->filter_data['Asha'] != NULL) 
+		// {
+		// 	$query .= " and s.ServiceProviderID = " . $this->filter_data['Asha'];
+		// }
+
+		// if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
+		// {
+		// 	$query .= " and pw.PWRegistrationDate  > '" . $this->filter_data['date_from'] . "' and pw.PWRegistrationDate < '" . $this->filter_data['date_to'] . "'";
+		// }
+
+		$query = "SELECT count(*) as total from tblpregnant_woman pw
+		where pw.IsPregnant=1 ";
+
+		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
+		{
+			$query .= " and pw.LMPDate > '" . $this->filter_data['date_from'] . "' and pw.LMPDate < '" . $this->filter_data['date_to'] . "'";
+		}
 
 		if ($this->filter_data['ANM'] != NULL) 
 		{
-			$query .= " and s.ANMID = " . $this->filter_data['ANM'];
+			$query .= " and pw.ANMID = " . $this->filter_data['ANM'];
 		}
 
 		if ($this->filter_data['Asha'] != NULL) 
 		{
-			$query .= " and s.ServiceProviderID = " . $this->filter_data['Asha'];
+			$query .= " and pw.AshaID = " . $this->filter_data['Asha'];
 		}
 
-		if ($this->filter_data['date_from'] != NULL && $this->filter_data['date_to'] != NULL)
+		$query .= " and pw.CreatedBy in (select user_id from tblusers where is_deleted=0 ";
+		if ($this->loginData->user_role == 6 ) 
 		{
-			$query .= " and pw.PWRegistrationDate  > '" . $this->filter_data['date_from'] . "' and pw.PWRegistrationDate < '" . $this->filter_data['date_to'] . "'";
+			$state_code = $this->loginData->state_code;
+			$query .= " and state_code = '$state_code'";	
 		}
+		$query .= " and user_mode= 1)";
 
 		$result = $this->db->query($query)->result()[0]->total;
 		if ($result == 0) {
@@ -1212,7 +1238,7 @@ private function get_trend_fp_counselling()
 	inner join tblhhfamilymember m 
 	on s.HHUID = m.HHUID
 	inner join 
-	(select * from tblmstfpfdetail group by womenname_guid) a
+	(select * from tblfp_followup group by womenname_guid) a
 	on a.womenname_guid = m.HHFamilyMemberGUID
 	where 1";
 

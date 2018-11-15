@@ -6,6 +6,7 @@ class Login extends Ci_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('Common_Model');
 	}
 	public function index()
 	{	
@@ -24,21 +25,101 @@ class Login extends Ci_Controller {
 		if($res->num_rows() == 1)
 		{
 			$row = $res->row();
-
 			$this->session->set_userdata('loginData',$row);
+			 // print_r($row); die();
 
-			if($row->user_role == 5)
+			$query = "SELECT * FROM role_permissions as rp LEFT JOIN mstrole as mst on rp.RoleID=mst.RoleID WHERE rp.RoleID='$row->user_role' ";
+			 // die($query);
+			$content['role_permission'] = $this->Common_Model->query_data($query);
+      // print_r($content['role_permission']); die();
+
+			if($row->user_role == 1)
 			{
-				redirect('admin/dashboard');
-			}
-			else if($row->user_role == 2)
+				$this->session->set_flashdata('tr_msg', 'Your username or password was incorrect.');
+				redirect('login');
+			}else if($row->user_role == 2){
+				$this->session->set_flashdata('tr_msg', 'Your username or password was incorrect.');
+				redirect('login');
+			}else if($row->user_role == 3)
 			{
-				redirect('users/dashboard');
+				$this->session->set_flashdata('tr_msg', 'Your username or password was incorrect.');
+				redirect('login');
+			}else if($row->user_role == 4){
+				$this->session->set_flashdata('tr_msg', 'Your username or password was incorrect.');
+				redirect('login');
+			}else if($row->user_role == 5)
+			{
+				redirect('mnch_dashboard');
+			}else if($row->user_role == 6){
+
+				foreach ($content['role_permission'] as $row) { 
+					if ($row->Controller == "mnch_dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "Output_indicators" && $row->Action == "index") { 
+						redirect('Output_indicators');
+					}else if ($row->Controller == "Process_indicators" && $row->Action == "index") { 
+						redirect('Process_indicators');
+					}else if ($row->Controller == "Drill_downreport" && $row->Action == "index") { 
+						redirect('Drill_downreport');
+					}
+				}
+
+			}else if($row->user_role == 7)
+			{
+				foreach ($content['role_permission'] as $row) { 
+					if ($row->Controller == "mnch_dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "Output_indicators" && $row->Action == "index") { 
+						redirect('Output_indicators');
+					}else if ($row->Controller == "Process_indicators" && $row->Action == "index") { 
+						redirect('Process_indicators');
+					}else if ($row->Controller == "Drill_downreport" && $row->Action == "index") { 
+						redirect('Drill_downreport');
+					}
+				}
+
+			}else if($row->user_role == 8)
+			{
+				foreach ($content['role_permission'] as $row) { 
+					if ($row->Controller == "mnch_dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "Output_indicators" && $row->Action == "index") { 
+						redirect('Output_indicators');
+					}else if ($row->Controller == "Process_indicators" && $row->Action == "index") { 
+						redirect('Process_indicators');
+					}else if ($row->Controller == "Drill_downreport" && $row->Action == "index") { 
+						redirect('Drill_downreport');
+					}
+				}
+
+			}else if ($row->user_role == 10) {
+				
+				foreach ($content['role_permission'] as $row) { 
+					if ($row->Controller == "mnch_dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "dashboard" && $row->Action == "index") { 
+						redirect('dashboard');
+					} else if ($row->Controller == "Output_indicators" && $row->Action == "index") { 
+						redirect('Output_indicators');
+					}else if ($row->Controller == "Process_indicators" && $row->Action == "index") { 
+						redirect('Process_indicators');
+					}else if ($row->Controller == "Drill_downreport" && $row->Action == "index") { 
+						redirect('Drill_downreport');
+					}
+				}
+
 			}
 		}
 		else
 		{
-			redirect('');
+			$this->session->set_flashdata('tr_msg', 'Your username or password was incorrect.');
+			redirect('login');
 		}
 	}
 

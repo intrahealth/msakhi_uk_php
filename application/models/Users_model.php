@@ -16,6 +16,15 @@ class Users_Model extends CI_Model {
 			return false;
 		}	
 	}
+
+	public function isLoggedInGov(){
+		$loginData = $this->session->userdata('loginData');
+		if($loginData->user_role == 8){
+			return true;
+		} else {
+			return false;
+		}	
+	}
 	
 	
 }

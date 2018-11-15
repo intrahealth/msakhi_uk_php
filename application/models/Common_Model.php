@@ -45,6 +45,10 @@ class Common_Model extends CI_Model {
       	return $query->result();
       }
 
+      public function query_data_noresult($sql){
+      	$query = $this->db->query($sql);
+      }
+
       public function query_data_array($sql){
       	$query = $this->db->query($sql);
       	return $query->result_array();
@@ -292,7 +296,7 @@ class Common_Model extends CI_Model {
 	}
 	
 	public function getStateList($languageId=1,$selected='',$stateCode=null){
-		$sql="SELECT StateCode,StateName FROM mststate where 	LanguageID=$languageId";
+		$sql="SELECT StateCode,StateName FROM mststate where LanguageID=$languageId";
 		if ($stateCode != null)
 			$sql.= ' and  StateCode=' . $stateCode;
 		$result=$this->query_data($sql);
@@ -390,10 +394,40 @@ class Common_Model extends CI_Model {
 		
 	}
 
+	function get_user_id_from_asha_id($asha_id = '')
+	{
+
+	$ashaid = 	$this->db->get_where('mstasha', array('ASHAUID' => $asha_id))->row('ASHAID');
+	return $this->db->get_where('userashamapping', array('AshaID'=> $ashaid))->row('UserID');
+
+ 	}
+
+ 	function get_user_id_from_charge_of($id = '')
+	{
+		$asha_id = $this->db->get_where('tblextracharge', array('ID' => $id))->row('ChargeOf');
+
+		$ashaid = 	$this->db->get_where('mstasha', array('ASHAUID' => $asha_id))->row('ASHAID');
+		
+		return $this->db->get_where('userashamapping', array('AshaID'=> $ashaid))->row('UserID');
+
+ 	}
 
 
+ 	function get_user_id_anm_from_charge_of($id='')
+ 	{
+ 		$anm_id = $this->db->get_where('tblextrachargeanm', array('ID' => $id))->row('ChargeOf');
 
+		$anmid = 	$this->db->get_where('mstanm', array('ANMUID' => $anm_id))->row('ANMID');
+		
+		return $this->db->get_where('useranmmapping', array('ANMID'=> $anmid))->row('UserID');
+ 	}
 
+ 	function get_user_id_from_anm_id($anm_id = '')
+	{
 
+	$anmid = 	$this->db->get_where('mstanm', array('ANMUID' => $anm_id))->row('ANMID');
+	return $this->db->get_where('useranmmapping', array('ANMID'=> $anmid))->row('UserID');
+
+ 	}
 
 }

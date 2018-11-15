@@ -1,7 +1,7 @@
 <?php 
 
 /**
-* 
+* Data export model is supplied with query and it creates csv and pdf
 */
 class Data_export_model extends Ci_Model
 {
@@ -154,6 +154,7 @@ class Data_export_model extends Ci_Model
 		header("Expires: 0");
 
 		$handle = fopen('php://output', 'w');
+		fwrite($handle, chr(239) . chr(187) . chr(191));
 
 		fputcsv($handle, $header);
 		foreach ($records as $row) {
@@ -161,6 +162,7 @@ class Data_export_model extends Ci_Model
 		}
 
 		fclose($handle);
+		exit();
 	}
 
 }
